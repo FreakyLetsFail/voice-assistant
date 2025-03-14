@@ -2,211 +2,93 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --primary-color: #4f46e5;
-  --primary-color-dark: #4338ca;
-  --text-color-light: #f8fafc;
-  --text-color-dark: #1e293b;
-  --bg-color-light: #ffffff;
-  --bg-color-dark: #121212;
-  --card-color-light: #f1f5f9;
-  --card-color-dark: #1e1e1e;
-  --border-color-light: #e2e8f0;
-  --border-color-dark: #2d3748;
-  --hover-color-light: #e2e8f0;
-  --hover-color-dark: #2a2a2a;
-  --shadow-light: 0 4px 6px rgba(0, 0, 0, 0.05);
-  --shadow-dark: 0 4px 6px rgba(0, 0, 0, 0.2);
-  --transition-speed: 0.3s;
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 240 10% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 3.9%;
+    --primary: 250 95.2% 58.8%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 240 4.8% 95.9%;
+    --secondary-foreground: 240 5.9% 10%;
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 240 3.8% 46.1%;
+    --accent: 240 4.8% 95.9%;
+    --accent-foreground: 240 5.9% 10%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 5.9% 90%;
+    --input: 240 5.9% 90%;
+    --ring: 250 95.2% 58.8%;
+    --radius: 0.75rem;
+  }
+ 
+  .dark {
+    --background: 240 10% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 240 10% 6.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 240 10% 6.9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 250 95.2% 58.8%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 240 3.7% 15.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;
+    --accent: 240 3.7% 15.9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
+    --ring: 250 95.2% 58.8%;
+  }
 }
-
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-html,
-body {
-  height: 100%;
-  overscroll-behavior: none;
-  overflow-x: hidden;
-}
-
-.light-mode {
-  --bg-primary: var(--bg-color-light);
-  --text-primary: var(--text-color-dark);
-  --card-bg: var(--card-color-light);
-  --border-color: var(--border-color-light);
-  --hover-color: var(--hover-color-light);
-  --shadow: var(--shadow-light);
-}
-
-.dark-mode {
-  --bg-primary: var(--bg-color-dark);
-  --text-primary: var(--text-color-light);
-  --card-bg: var(--card-color-dark);
-  --border-color: var(--border-color-dark);
-  --hover-color: var(--hover-color-dark);
-  --shadow: var(--shadow-dark);
-}
-
-body {
-  background-color: var(--bg-primary);
-  color: var(--text-primary);
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-  transition: background-color var(--transition-speed), color var(--transition-speed);
+ 
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground min-h-screen;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
 }
 
 /* Animation für Visualizer */
-@keyframes sound {
-  0% { height: 5px; }
-  100% { height: 30px; }
+.audio-visualizer-active .audio-visualizer-bar:nth-child(1) { animation-delay: 0.0s; }
+.audio-visualizer-active .audio-visualizer-bar:nth-child(2) { animation-delay: 0.1s; }
+.audio-visualizer-active .audio-visualizer-bar:nth-child(3) { animation-delay: 0.2s; }
+.audio-visualizer-active .audio-visualizer-bar:nth-child(4) { animation-delay: 0.1s; }
+.audio-visualizer-active .audio-visualizer-bar:nth-child(5) { animation-delay: 0.0s; }
+
+.audio-visualizer-active .audio-visualizer-bar {
+  @apply animate-visualizer-bar;
 }
 
 /* Animation für sprechende Nachricht */
+.message-speaking::after {
+  content: "";
+  @apply absolute -bottom-2 left-3 h-1 rounded-sm bg-primary;
+  animation: speaking 1.5s infinite;
+}
+
 @keyframes speaking {
   0% { width: 8px; }
   50% { width: 32px; }
   100% { width: 8px; }
 }
 
-/* Animation für pulsierende Aufnahme-Taste */
-@keyframes pulse {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.05); }
-  100% { transform: scale(1); }
-}
-
-/* Animation für Fade-In */
+/* Fade-In Animation */
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
 }
 
-/* Anpassbare Klassen */
-@layer components {
-  .app-container {
-    @apply min-h-screen flex flex-col mx-auto px-4;
-    max-width: 48rem;
-  }
-
-  .header {
-    @apply flex justify-between items-center py-4 border-b transition-colors;
-    border-color: var(--border-color);
-  }
-
-  .conversation-container {
-    @apply flex-1 overflow-y-auto py-4 pr-1;
-  }
-
-  .conversation {
-    @apply flex flex-col gap-3;
-  }
-
-  .message {
-    @apply px-4 py-3 rounded-xl max-w-[85%] break-words;
-    animation: fadeIn 0.3s ease-in-out;
-  }
-
-  .message-system {
-    @apply bg-[var(--card-bg)] self-center text-center max-w-full mb-2;
-  }
-
-  .message-user {
-    @apply bg-[var(--primary-color)] text-white self-end;
-  }
-
-  .message-assistant {
-    @apply bg-[var(--card-bg)] self-start;
-  }
-
-  .message-speaking::after {
-    content: "";
-    @apply absolute -bottom-2 left-3 h-1 rounded-sm;
-    background-color: var(--primary-color);
-    animation: speaking 1.5s infinite;
-  }
-
-  .audio-visualizer {
-    @apply flex items-end h-10 gap-1 justify-center;
-  }
-
-  .audio-visualizer-bar {
-    @apply w-1 h-1 rounded-full transition-all duration-100;
-    background-color: var(--primary-color);
-  }
-
-  .audio-visualizer-active .audio-visualizer-bar {
-    animation: sound 0.5s infinite alternate;
-  }
-
-  .audio-visualizer-active .audio-visualizer-bar:nth-child(1) { animation-delay: 0.0s; }
-  .audio-visualizer-active .audio-visualizer-bar:nth-child(2) { animation-delay: 0.1s; }
-  .audio-visualizer-active .audio-visualizer-bar:nth-child(3) { animation-delay: 0.2s; }
-  .audio-visualizer-active .audio-visualizer-bar:nth-child(4) { animation-delay: 0.1s; }
-  .audio-visualizer-active .audio-visualizer-bar:nth-child(5) { animation-delay: 0.0s; }
-
-  .record-btn {
-    @apply w-16 h-16 rounded-full flex items-center justify-center shadow transition-all duration-200;
-    background-color: var(--primary-color);
-  }
-
-  .record-btn:hover {
-    background-color: var(--primary-color-dark);
-    @apply transform scale-105;
-  }
-
-  .record-btn-recording {
-    @apply bg-red-500;
-    animation: pulse 1.5s infinite;
-  }
-
-  .controls {
-    @apply flex justify-center mt-auto py-4;
-  }
-
-  .modal {
-    @apply fixed inset-0 z-50 items-center justify-center hidden;
-    background-color: rgba(0, 0, 0, 0.5);
-  }
-
-  .modal-open {
-    @apply flex;
-  }
-
-  .modal-content {
-    @apply rounded-xl w-[90%] max-w-md max-h-[90vh] overflow-y-auto shadow;
-    background-color: var(--bg-primary);
-  }
-
-  .modal-header {
-    @apply p-4 flex justify-between items-center border-b;
-    border-color: var(--border-color);
-  }
-
-  .modal-body {
-    @apply p-4;
-  }
-
-  .setting-group {
-    @apply mb-6;
-  }
-
-  .setting-label {
-    @apply mb-2 text-sm font-medium;
-  }
-
-  .select-input {
-    @apply w-full p-2 rounded-lg border;
-    border-color: var(--border-color);
-    background-color: var(--bg-primary);
-    color: var(--text-primary);
-  }
-
-  .secondary-btn {
-    @apply border px-4 py-2 rounded-lg text-base w-full;
-    background-color: var(--card-bg);
-    border-color: var(--border-color);
-  }
+.fade-in {
+  animation: fadeIn 0.3s ease-in-out;
 }

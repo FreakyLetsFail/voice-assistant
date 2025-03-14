@@ -1,26 +1,195 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --primary-color: #4f46e5;
+  --primary-color-dark: #4338ca;
+  --text-color-light: #f8fafc;
+  --text-color-dark: #1e293b;
+  --bg-color-light: #ffffff;
+  --bg-color-dark: #121212;
+  --card-color-light: #f1f5f9;
+  --card-color-dark: #1e1e1e;
+  --border-color-light: #e2e8f0;
+  --border-color-dark: #2d3748;
+  --hover-color-light: #e2e8f0;
+  --hover-color-dark: #2a2a2a;
+  --shadow-light: 0 4px 6px rgba(0, 0, 0, 0.05);
+  --shadow-dark: 0 4px 6px rgba(0, 0, 0, 0.2);
+  --transition-speed: 0.3s;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html,
+body {
+  height: 100%;
+  overscroll-behavior: none;
+  overflow-x: hidden;
+}
+
+.light-mode {
+  --bg-primary: var(--bg-color-light);
+  --text-primary: var(--text-color-dark);
+  --card-bg: var(--card-color-light);
+  --border-color: var(--border-color-light);
+  --hover-color: var(--hover-color-light);
+  --shadow: var(--shadow-light);
+}
+
+.dark-mode {
+  --bg-primary: var(--bg-color-dark);
+  --text-primary: var(--text-color-light);
+  --card-bg: var(--card-color-dark);
+  --border-color: var(--border-color-dark);
+  --hover-color: var(--hover-color-dark);
+  --shadow: var(--shadow-dark);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  transition: background-color var(--transition-speed), color var(--transition-speed);
+}
+
+/* Animation für Visualizer */
+@keyframes sound {
+  0% { height: 5px; }
+  100% { height: 30px; }
+}
+
+/* Animation für sprechende Nachricht */
+@keyframes speaking {
+  0% { width: 8px; }
+  50% { width: 32px; }
+  100% { width: 8px; }
+}
+
+/* Animation für pulsierende Aufnahme-Taste */
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+/* Animation für Fade-In */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Anpassbare Klassen */
+.app-container {
+  @apply min-h-screen flex flex-col max-w-3xl mx-auto px-4;
+}
+
+.header {
+  @apply flex justify-between items-center py-4 border-b border-border-color transition-colors;
+}
+
+.conversation-container {
+  @apply flex-1 overflow-y-auto py-4 pr-1;
+}
+
+.conversation {
+  @apply flex flex-col gap-3;
+}
+
+.message {
+  @apply px-4 py-3 rounded-xl max-w-[85%] break-words animation-fadeIn;
+}
+
+.message-system {
+  @apply bg-card-bg self-center text-center max-w-full mb-2;
+}
+
+.message-user {
+  @apply bg-primary-color text-white self-end;
+}
+
+.message-assistant {
+  @apply bg-card-bg self-start;
+}
+
+.message-speaking::after {
+  content: "";
+  @apply absolute -bottom-2 left-3 w-8 h-1 bg-primary-color rounded-sm;
+  animation: speaking 1.5s infinite;
+}
+
+.audio-visualizer {
+  @apply flex items-end h-10 gap-1 justify-center;
+}
+
+.audio-visualizer-bar {
+  @apply w-1 h-1 bg-primary-color rounded-full transition-all duration-100;
+}
+
+.audio-visualizer-active .audio-visualizer-bar {
+  animation: sound 0.5s infinite alternate;
+}
+
+.audio-visualizer-active .audio-visualizer-bar:nth-child(1) { animation-delay: 0.0s; }
+.audio-visualizer-active .audio-visualizer-bar:nth-child(2) { animation-delay: 0.1s; }
+.audio-visualizer-active .audio-visualizer-bar:nth-child(3) { animation-delay: 0.2s; }
+.audio-visualizer-active .audio-visualizer-bar:nth-child(4) { animation-delay: 0.1s; }
+.audio-visualizer-active .audio-visualizer-bar:nth-child(5) { animation-delay: 0.0s; }
+
+.record-btn {
+  @apply w-16 h-16 rounded-full flex items-center justify-center shadow transition-all duration-200 bg-primary-color;
+}
+
+.record-btn:hover {
+  @apply bg-primary-color-dark transform scale-105;
+}
+
+.record-btn-recording {
+  @apply bg-red-500;
+  animation: pulse 1.5s infinite;
+}
+
+.controls {
+  @apply flex justify-center mt-auto py-4;
+}
+
+.modal {
+  @apply fixed inset-0 bg-black/50 z-50 items-center justify-center hidden;
+}
+
+.modal-open {
+  @apply flex;
+}
+
+.modal-content {
+  @apply bg-bg-primary rounded-xl w-[90%] max-w-md max-h-[90vh] overflow-y-auto shadow;
+}
+
+.modal-header {
+  @apply p-4 flex justify-between items-center border-b border-border-color;
+}
+
+.modal-body {
+  @apply p-4;
+}
+
+.setting-group {
+  @apply mb-6;
+}
+
+.setting-label {
+  @apply mb-2 text-sm font-medium;
+}
+
+.select-input {
+  @apply w-full p-2 rounded-lg border border-border-color bg-bg-primary text-text-primary;
+}
+
+.secondary-btn {
+  @apply bg-card-bg border border-border-color px-4 py-2 rounded-lg text-base w-full;
 }

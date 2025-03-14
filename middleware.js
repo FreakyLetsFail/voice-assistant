@@ -3,54 +3,57 @@ import { createMiddlewareClient } from '@supabase/auth-helpers-nextjs';
 import { authConfig } from './app/auth/auth.config';
 
 export async function middleware(request) {
-  // Initialize Supabase auth middleware client
+  // Erstelle eine Response für die Weiterleitung
   const response = NextResponse.next();
-  const supabase = createMiddlewareClient({ req: request, res: response });
+
+  // Initialisiere Supabase Middleware-Client mit expliziten Umgebungsvariablen
+  const supabase = createMiddlewareClient({ 
+    req: request, 
+    res: response,
+    supabaseUrl: process.env.NEXT_PUBLIC_SUPABASE_URL,
+    supabaseKey: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  });
   
-  // Get the pathname from the request
+  // Extrahiere den Pfad aus der Anfrage
   const pathname = request.nextUrl.pathname;
   
-  // Check if the user has an active session
+  // Hole die aktuelle Sitzung
   const { data: { session } } = await supabase.auth.getSession();
   const hasSession = !!session;
   
-  // Check if the path is a protected route (not public)
+  // Überprüfe, ob es sich um eine öffentliche Route handelt
   const isPublicRoute = authConfig.publicRoutes.some(route => 
     pathname === route || pathname.startsWith(`${route}/`)
   );
   
-  // Check if the path is an auth route
+  // Überprüfe, ob es sich um eine Authentifizierungsroute handelt
   const isAuthRoute = authConfig.authRoutes.some(route =>
     pathname === route || pathname.startsWith(`${route}/`)
   );
   
-  // Redirect to login if accessing protected route without session
+  // Weiterleitung zur Anmeldung bei geschützten Routen ohne Sitzung
   if (!isPublicRoute && !hasSession) {
     const redirectUrl = new URL(authConfig.loginPage, request.url);
-    // Save the original URL the user was trying to access
     redirectUrl.searchParams.set('redirectUrl', pathname);
     return NextResponse.redirect(redirectUrl);
   }
   
-  // Redirect to home if accessing auth route with session
+  // Weiterleitung zur Startseite bei Authentifizierungsrouten mit aktiver Sitzung
   if (isAuthRoute && hasSession) {
     return NextResponse.redirect(new URL(authConfig.defaultProtectedPage, request.url));
   }
   
+  // Standardmäßig die ursprüngliche Antwort zurückgeben
   return response;
 }
 
 export const config = {
-  // Match all routes except api routes, static files, and other internal routes
+  // Definiere, welche Routen von der Middleware betroffen sind
   matcher: [
-    /*
-     * Match all paths except:
-     * 1. /api routes
-     * 2. /_next (Next.js internals)
-     * 3. /_static (inside /public)
-     * 4. /_vercel (Vercel system files)
-     * 5. /favicon.ico, /manifest.json, /robots.txt (static files)
-     */
+    // Matche alle Routen außer:
+    // 1. API-Routen
+    // 2. Next.js interne Routen
+    // 3. Statische Dateien und Systemdateien
     '/((?!api|_next|_static|_vercel|favicon.ico|manifest.json|robots.txt).*)',
   ],
 };

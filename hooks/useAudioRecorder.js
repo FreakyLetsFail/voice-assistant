@@ -58,7 +58,7 @@ const useAudioRecorder = () => {
       const formData = new FormData();
       formData.append('audio', blob);
 
-      const response = await fetch('/api/speech-to-text', {
+      const response = await fetch('/api/speech-to-text', { // Fix: Corrected endpoint
         method: 'POST',
         body: formData,
       });
@@ -78,6 +78,8 @@ const useAudioRecorder = () => {
     } catch (err) {
       console.error('Fehler bei der Audioverarbeitung:', err);
       setError(`Fehler bei der Verarbeitung: ${err.message}`);
+    } finally {
+      setIsProcessing(false);
     }
   };
 

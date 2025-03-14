@@ -85,111 +85,128 @@ body {
 }
 
 /* Anpassbare Klassen */
-.app-container {
-  @apply min-h-screen flex flex-col max-w-3xl mx-auto px-4;
-}
+@layer components {
+  .app-container {
+    @apply min-h-screen flex flex-col mx-auto px-4;
+    max-width: 48rem;
+  }
 
-.header {
-  @apply flex justify-between items-center py-4 border-b border-border-color transition-colors;
-}
+  .header {
+    @apply flex justify-between items-center py-4 border-b transition-colors;
+    border-color: var(--border-color);
+  }
 
-.conversation-container {
-  @apply flex-1 overflow-y-auto py-4 pr-1;
-}
+  .conversation-container {
+    @apply flex-1 overflow-y-auto py-4 pr-1;
+  }
 
-.conversation {
-  @apply flex flex-col gap-3;
-}
+  .conversation {
+    @apply flex flex-col gap-3;
+  }
 
-.message {
-  @apply px-4 py-3 rounded-xl max-w-[85%] break-words animation-fadeIn;
-}
+  .message {
+    @apply px-4 py-3 rounded-xl max-w-[85%] break-words;
+    animation: fadeIn 0.3s ease-in-out;
+  }
 
-.message-system {
-  @apply bg-card-bg self-center text-center max-w-full mb-2;
-}
+  .message-system {
+    @apply bg-[var(--card-bg)] self-center text-center max-w-full mb-2;
+  }
 
-.message-user {
-  @apply bg-primary-color text-white self-end;
-}
+  .message-user {
+    @apply bg-[var(--primary-color)] text-white self-end;
+  }
 
-.message-assistant {
-  @apply bg-card-bg self-start;
-}
+  .message-assistant {
+    @apply bg-[var(--card-bg)] self-start;
+  }
 
-.message-speaking::after {
-  content: "";
-  @apply absolute -bottom-2 left-3 w-8 h-1 bg-primary-color rounded-sm;
-  animation: speaking 1.5s infinite;
-}
+  .message-speaking::after {
+    content: "";
+    @apply absolute -bottom-2 left-3 h-1 rounded-sm;
+    background-color: var(--primary-color);
+    animation: speaking 1.5s infinite;
+  }
 
-.audio-visualizer {
-  @apply flex items-end h-10 gap-1 justify-center;
-}
+  .audio-visualizer {
+    @apply flex items-end h-10 gap-1 justify-center;
+  }
 
-.audio-visualizer-bar {
-  @apply w-1 h-1 bg-primary-color rounded-full transition-all duration-100;
-}
+  .audio-visualizer-bar {
+    @apply w-1 h-1 rounded-full transition-all duration-100;
+    background-color: var(--primary-color);
+  }
 
-.audio-visualizer-active .audio-visualizer-bar {
-  animation: sound 0.5s infinite alternate;
-}
+  .audio-visualizer-active .audio-visualizer-bar {
+    animation: sound 0.5s infinite alternate;
+  }
 
-.audio-visualizer-active .audio-visualizer-bar:nth-child(1) { animation-delay: 0.0s; }
-.audio-visualizer-active .audio-visualizer-bar:nth-child(2) { animation-delay: 0.1s; }
-.audio-visualizer-active .audio-visualizer-bar:nth-child(3) { animation-delay: 0.2s; }
-.audio-visualizer-active .audio-visualizer-bar:nth-child(4) { animation-delay: 0.1s; }
-.audio-visualizer-active .audio-visualizer-bar:nth-child(5) { animation-delay: 0.0s; }
+  .audio-visualizer-active .audio-visualizer-bar:nth-child(1) { animation-delay: 0.0s; }
+  .audio-visualizer-active .audio-visualizer-bar:nth-child(2) { animation-delay: 0.1s; }
+  .audio-visualizer-active .audio-visualizer-bar:nth-child(3) { animation-delay: 0.2s; }
+  .audio-visualizer-active .audio-visualizer-bar:nth-child(4) { animation-delay: 0.1s; }
+  .audio-visualizer-active .audio-visualizer-bar:nth-child(5) { animation-delay: 0.0s; }
 
-.record-btn {
-  @apply w-16 h-16 rounded-full flex items-center justify-center shadow transition-all duration-200 bg-primary-color;
-}
+  .record-btn {
+    @apply w-16 h-16 rounded-full flex items-center justify-center shadow transition-all duration-200;
+    background-color: var(--primary-color);
+  }
 
-.record-btn:hover {
-  @apply bg-primary-color-dark transform scale-105;
-}
+  .record-btn:hover {
+    background-color: var(--primary-color-dark);
+    @apply transform scale-105;
+  }
 
-.record-btn-recording {
-  @apply bg-red-500;
-  animation: pulse 1.5s infinite;
-}
+  .record-btn-recording {
+    @apply bg-red-500;
+    animation: pulse 1.5s infinite;
+  }
 
-.controls {
-  @apply flex justify-center mt-auto py-4;
-}
+  .controls {
+    @apply flex justify-center mt-auto py-4;
+  }
 
-.modal {
-  @apply fixed inset-0 bg-black/50 z-50 items-center justify-center hidden;
-}
+  .modal {
+    @apply fixed inset-0 z-50 items-center justify-center hidden;
+    background-color: rgba(0, 0, 0, 0.5);
+  }
 
-.modal-open {
-  @apply flex;
-}
+  .modal-open {
+    @apply flex;
+  }
 
-.modal-content {
-  @apply bg-bg-primary rounded-xl w-[90%] max-w-md max-h-[90vh] overflow-y-auto shadow;
-}
+  .modal-content {
+    @apply rounded-xl w-[90%] max-w-md max-h-[90vh] overflow-y-auto shadow;
+    background-color: var(--bg-primary);
+  }
 
-.modal-header {
-  @apply p-4 flex justify-between items-center border-b border-border-color;
-}
+  .modal-header {
+    @apply p-4 flex justify-between items-center border-b;
+    border-color: var(--border-color);
+  }
 
-.modal-body {
-  @apply p-4;
-}
+  .modal-body {
+    @apply p-4;
+  }
 
-.setting-group {
-  @apply mb-6;
-}
+  .setting-group {
+    @apply mb-6;
+  }
 
-.setting-label {
-  @apply mb-2 text-sm font-medium;
-}
+  .setting-label {
+    @apply mb-2 text-sm font-medium;
+  }
 
-.select-input {
-  @apply w-full p-2 rounded-lg border border-border-color bg-bg-primary text-text-primary;
-}
+  .select-input {
+    @apply w-full p-2 rounded-lg border;
+    border-color: var(--border-color);
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+  }
 
-.secondary-btn {
-  @apply bg-card-bg border border-border-color px-4 py-2 rounded-lg text-base w-full;
+  .secondary-btn {
+    @apply border px-4 py-2 rounded-lg text-base w-full;
+    background-color: var(--card-bg);
+    border-color: var(--border-color);
+  }
 }
